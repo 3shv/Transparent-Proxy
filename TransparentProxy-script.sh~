@@ -11,7 +11,7 @@ read -p "Enter LDAP Password:" pass
 stty echo
 redsocks_conf_set(){
 	
-	sed -i "s|USERNAME|$user|g" redsocks.conf          #Doesn't work if ur username or password has "\" as character :(
+	sed -i "s|USERNAME|$user|g" redsocks.conf
 	sed -i "s|PASSWORD|$pass|g" redsocks.conf
 	sudo cp redsocks.conf /etc/redsocks.conf
 }

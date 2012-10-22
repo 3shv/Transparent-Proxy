@@ -5,4 +5,4 @@ A script for setting up transparent proxy within IIT Bombay's network so that yo
 You need not set any proxy!You can run any application in ubuntu with or without setting netmon proxy
 
 ==========================
-Dependencies: Ubuntu 12.04,iptables,apt-get,wget with https
+Dependencies: Ubuntu 12.04,iptables,apt-get,wget with https should be working & working internet connection
