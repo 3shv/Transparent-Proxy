@@ -102,5 +102,6 @@ clear
 echo -e "\nPress yes whenever asked from here onwards\n"
 echo -e "\nStarting redsocks redirctor\n"
 sudo /usr/local/sbin/redsocks -c ~/.redsocks.conf
+echo -e "\nDO NOT SET-UP IT ON A SHARED MACHINE. IT SETS THE PROXY SYSTEM WIDE.\n"
 echo -e "\nFinished...\n "
 cd ..
