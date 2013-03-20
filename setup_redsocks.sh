@@ -1,6 +1,6 @@
 #!/bin/bash
 # Originally written by przemoc.net. 
-# First modified and shared by Rajesh Veeankani. This is a clone.
+# First modified and shared by Rajesh Veeranki. This is a clone.
 # Modified by Dilawar. 
 echo "Executing the script..."
 cd darkk-redsocks-*/
