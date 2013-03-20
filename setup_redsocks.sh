@@ -3,22 +3,11 @@
 # First modified and shared by Rajesh Veeankani. This is a clone.
 # Modified by Dilawar. 
 echo "Executing the script..."
-if [ ! -f ./redsocks.zip ];
-then 
-  wget -O redsocks.zip https://github.com/darkk/redsocks/zipball/master
-  if [ $? -eq 0 ]
-          then echo -e "File downloaded\n"
-          else 
-    echo -e "Download failed..exiting!\n"
-    exit 1
-  fi
-fi 
-unzip -f -O redsocks.zip 
 cd darkk-redsocks-*/
 clear
 echo -e "Compiling redsocks\n"
 make
-sudo cp ./redsocks /usr/local/sbin/redsocks
+sudo mv ./redsocks /usr/local/sbin/redsocks
 package=redsocks
 if [ $? -eq 0 ]
         then echo -e "$package install succeeded\n"
@@ -29,11 +18,11 @@ if [ $? -eq 0 ]
 	exit 1
 fi
 clear
-echo -e "\nConfiguring redscoks.conf file.."
-echo -e "\n|- Please enter your credentials when prompted\n"
-read -p "  + Enter LDAP username:" username
+echo -e "Configuring redscoks.conf file..n"
+echo -e "|- Please enter your credentials when prompted"
+read -p "\n  + Enter LDAP username:" username
 stty -echo
-read -p "  + Enter LDAP Password:" pass
+read -p "\n  + Enter LDAP Password:" pass
 stty echo
 redsocks_conf_set(){
 touch redsocks.conf
@@ -80,9 +69,9 @@ sudo usermod -a -G redsocks $USER
 
 if [ -f $HOME/.redsocks.conf ];
 then 
-  echo "Configuration file .redsocks.conf is created in your home folder."
+  echo "\nNOTICE : Configuration file .redsocks.conf is created in your home folder."
 else 
-  echo "Configuration failed. Existing..."
+  echo "\nConfiguration failed. Existing..."
   exit
 fi 
 

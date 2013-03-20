@@ -6,7 +6,7 @@ elif [ -f /usr/sbin/iptables ];
 then 
   IPTABLES="/usr/sbin/iptables"
 else
-  echo -e "ERROR : Install iptables. \n"
+  echo -e "\nERROR : Install iptables. \n"
   exit
 fi
 
@@ -78,10 +78,9 @@ $IPTABLES -t nat -A REDSOCKS_FILTER -d 192.168.0.0/16 -j RETURN
  
 ## Filter all traffic from the own host
 ## BE CAREFULL HERE IF THE SOCKS-SERVER RUNS ON THIS MACHINE
-$IPTABLES -t nat -A OUTPUT     -p tcp -m owner --uid-owner $USER -j REDSOCKS
+#$IPTABLES -t nat -A OUTPUT     -p tcp -j REDSOCKS
  
 # Filter all traffic that is routed over this host
 #$IPTABLES -t nat -A PREROUTING -p tcp -j REDSOCKS_FILTER
  
-echo "IPtables reconfigured."
-echo "Rerun this script again as normal user without any argument."
+echo "\mIPtables reconfigured."
