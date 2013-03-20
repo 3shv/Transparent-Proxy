@@ -19,29 +19,32 @@ clear
 echo -e "Compiling redsocks\n"
 make
 sudo cp ./redsocks /usr/local/sbin/redsocks
-#sudo cp ./debian/init.d /etc/init.d/redsocks
-#sudo cp ./debian/redsocks.default /etc/default/redsocks
-#sudo chmod +x /etc/init.d/redsocks
 package=redsocks
 if [ $? -eq 0 ]
         then echo -e "$package install succeeded\n"
+          rm -rf darkk*
+          rm redsocks.zip
         else 
 	echo -e "$package install failed..exiting!\n"
 	exit 1
 fi
 clear
-echo -e "\nConfiguring redscoks.conf file..Please enter your credentials when prompted\n"
-read -p "Enter LDAP username:" username
+echo -e "\nConfiguring redscoks.conf file.."
+echo -e "\n|- Please enter your credentials when prompted\n"
+read -p "  + Enter LDAP username:" username
 stty -echo
-read -p "Enter LDAP Password:" pass
+read -p "  + Enter LDAP Password:" pass
 stty echo
 redsocks_conf_set(){
 touch redsocks.conf
+
 echo "base {
  log_debug = on;
  log_info = on;
  log = \"file:/tmp/redsock.log\";
  daemon = on;
+ //user = $USER;
+ //group = redsocks;
  redirector = iptables;
 }
 redsocks {
@@ -72,6 +75,8 @@ login = \"$username\";
 }
 
 redsocks_conf_set 
+sudo groupadd -f redsocks
+sudo usermod -a -G redsocks $USER
 
 if [ -f $HOME/.redsocks.conf ];
 then 
