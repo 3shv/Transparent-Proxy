@@ -39,7 +39,7 @@ echo "base {
  log_info = on;
  log = \"stderr\";
  daemon = on;\
- user = dilawar;
+ user = redsocks;
  group = redsocks;
  redirector = iptables;
 }
