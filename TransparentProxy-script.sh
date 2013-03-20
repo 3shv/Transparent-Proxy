@@ -1,28 +1,24 @@
 #!/bin/bash
 echo "Executing the script..."
-wget -O redsocks.zip https://github.com/darkk/redsocks/zipball/master
-if [ $? -eq 0 ]
-        then echo -e "File downloaded\n"
-        else 
-	echo -e "Download failed..exiting!\n"
-	exit 1
-fi
-unzip redsocks.zip 
+if [ ! -f ./redsocks.zip ];
+then 
+  wget -O redsocks.zip https://github.com/darkk/redsocks/zipball/master
+  if [ $? -eq 0 ]
+          then echo -e "File downloaded\n"
+          else 
+    echo -e "Download failed..exiting!\n"
+    exit 1
+  fi
+fi 
+unzip -f -O redsocks.zip 
 cd darkk-redsocks-*/
-echo -e "Installing libevent-dev package\n"
-package=libevent-dev
-sudo apt-get install libevent-dev
-if [ $? -eq 0 ]
-        then echo -e "$package install succeeded\n"
-        else 
-	echo -e "$package install failed..exiting!\n"
-	exit 1
-fi
 clear
 echo -e "Compiling redsocks\n"
 make
 sudo cp ./redsocks /usr/local/sbin/redsocks
-sudo apt-get install redsocks
+sudo cp ./debian/init.d /etc/init.d/redsocks
+sudo cp ./debian/redsocks.default /etc/default/redsocks
+sudo chmod +x /etc/init.d/redsocks
 package=redsocks
 if [ $? -eq 0 ]
         then echo -e "$package install succeeded\n"
@@ -39,11 +35,11 @@ stty echo
 redsocks_conf_set(){
 touch redsocks.conf
 echo "base {
- log_debug = off;
- log_info = off;
+ log_debug = on;
+ log_info = on;
  log = \"stderr\";
  daemon = on;\
- user = redsocks;
+ user = dilawar;
  group = redsocks;
  redirector = iptables;
 }
@@ -70,12 +66,21 @@ ip = 10.201.13.50;
 type = http-connect;
 login = \"$username\";
  password = \"$pass\";
-}" > tmp.txt
-sudo cp tmp.txt /etc/redsocks.conf
-rm tmp.txt
+}" > ~/.redsocks.conf
+sudo cp ~/.redsocks.conf /etc/redsocks.conf
 }
+
+if [ -f ~/.redsocks.conf ];
+then 
+  echo "Configuration file .redsocks.conf is created in your home folder."
+else 
+  echo "Configuration failed. Existing..."
+  exit
+fi 
+
 redirect_rules_set(){
 touch redirect.rules
+# This is from http://pritambaral.com/2012/04/transparent-proxy-on-linux/
 echo "*nat
 :PREROUTING ACCEPT [0:0]
 :INPUT ACCEPT [0:0]
@@ -89,19 +94,13 @@ echo "*nat
 -A OUTPUT -o wlan0 -p tcp -m tcp --dport 80 -j DNAT --to-destination 127.0.0.1:5123
 -A OUTPUT -o wlan0 -p tcp -m tcp --dport 443 -j DNAT --to-destination 127.0.0.1:5124
 COMMIT" > redirect.rules
-chmod +x ./redirect.rules
-sudo iptables-restore ./redirect.rules
+sudo iptables-restore < redirect.rules
 }
 redsocks_conf_set
-sudo sed -i 's/no/yes/g' /etc/default/redsocks
-sudo sed -i 's.DAEMON=/usr.DAEMON=/usr/local.g' /etc/init.d/redsocks
 redirect_rules_set
 clear
 echo -e "\nPress yes whenever asked from here onwards\n"
-sudo apt-get install iptables-persistent
 echo -e "\nStarting redsocks redirctor\n"
-sudo service redsocks start
+sudo /usr/local/sbin/redsocks -c ~/.redsocks.conf
 echo -e "\nFinished...\n "
 cd ..
-rm -rf darkk-redsocks-*/
-rm -rf redsocks.zip
