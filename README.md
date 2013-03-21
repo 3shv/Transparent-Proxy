@@ -1,7 +1,6 @@
 Transparent-Proxy
 =================
-
-This is a fork of Rajesh Veeranki work. But it is greatly influenced by http://przemoc.net/tips/linux#making_socks_proxy_transparent 
+Greatly influenced by http://przemoc.net/tips/linux#making_socks_proxy_transparent 
 
 USAGE 
 =====
